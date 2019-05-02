@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +41,7 @@ public ResponseEntity<Object> getAllBooks() {
 	List<book> bookFounds = daobook.findAll();
 	
 	//
-	JSONObject aux = new JSONObject();
+	
 	JSONArray json_array= new JSONArray();
 	
 	if (bookFounds.size()>0) {	
@@ -48,7 +49,50 @@ public ResponseEntity<Object> getAllBooks() {
 		
 		 for(book b: bookFounds) {
 			 System.out.println("book name:"+b.getName());
+			 JSONObject aux = new JSONObject();
 			 aux.put("name", b.getName());
+			 json_array.put(aux);
+			
+	     }
+			 
+	 }
+			 
+	 JSONObject obj = new JSONObject();
+	 
+
+
+     obj.put("error", 0);
+     obj.put("results", json_array);
+
+      
+
+     	return ResponseEntity.ok().body(obj.toString());
+		
+	
+	
+	}
+
+
+
+@GetMapping(path = {"/nombre/{nom}"})
+public ResponseEntity<Object> getBookByName(@PathVariable String nom) {
+	
+	
+	List<book> bookFounds = daobook.findByName(nom);
+	
+	//
+	
+	JSONArray json_array= new JSONArray();
+	
+	if (bookFounds.size()>0) {	
+		 
+		
+		 for(book b: bookFounds) {
+			 System.out.println("book name:"+b.getName());
+			 JSONObject aux = new JSONObject();
+			 aux.put("name", b.getName());
+			 aux.put("Editorial", b.getBookdetail().getEditorial());
+			 aux.put("Autor", b.getBookdetail().getAutor());
 			 json_array.put(aux);
 			
 	     }
